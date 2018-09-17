@@ -1,10 +1,12 @@
-FROM alpine:edge
+FROM alpine:3.8
 
-RUN echo http://dl-3.alpinelinux.org/alpine/edge/testing  >> /etc/apk/repositories
+LABEL "io.navitia.name"="navitia/python"
+
 WORKDIR /
 RUN apk --update --no-cache add \
     g++ \
     build-base \
+    libstdc++ \
     python \
     musl-dev \
     linux-headers \
@@ -18,7 +20,7 @@ RUN apk --update --no-cache add \
     pip install  --no-cache-dir -U pip && \
     pip install --no-cache-dir uwsgi && \
     git clone https://github.com/google/protobuf.git && cd protobuf && \
-    git checkout v3.1.0 && ./autogen.sh && ./configure && make -j$(grep -c vendor_id /proc/cpuinfo) && \
+    git checkout v3.3.0 && ./autogen.sh && ./configure && make -j$(grep -c vendor_id /proc/cpuinfo) && \
     make install && \
     cd python && python setup.py install --cpp_implementation && \
     cd / && rm -rf protobuf && apk del \
