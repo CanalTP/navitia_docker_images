@@ -41,7 +41,7 @@ RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		&& wget --output-document=- http://apt.canaltp.local/debian/repositories/canaltp.gpg.key | apt-key add - \
 		&& apt-get -y --force-yes -t jessie-dev install libosmpbf-dev python-protobuf \
 		&& apt-get clean \
-		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN pip install pip virtualenv -U && \
 	# install dependancies for libc
