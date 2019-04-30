@@ -33,6 +33,13 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Python 3.6 needed by black for our pre-commits
+RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
+    && cd /tmp/Python-3.6.8     \
+    && ./configure              \
+    && make -j$(nproc)          \
+    && make altinstall
+
 # Add address of the canaltp.local apt server
 RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		&& apt-get update \
@@ -40,13 +47,14 @@ RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		# Get the gpg key to authorize downloads from local apt server
 		&& wget --output-document=- http://apt.canaltp.local/debian/repositories/canaltp.gpg.key | apt-key add - \
 		&& apt-get -y --force-yes -t jessie-dev install libosmpbf-dev python-protobuf \
-		&& apt-get clean \
-		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+		&& apt-get clean
 
-RUN pip install pip virtualenv -U && \
+RUN pip install pip virtualenv pipenv -U && \
 	# install dependancies for libc
-	pip install ujson==1.33 numpy==1.9 && \
-	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
+	pip install ujson==1.33 numpy==1.9
+
+# Clean up the environment
+RUN rm -rf /tmp/* /var/tmp/* ~/.cache/pip/* /var/lib/apt/lists/* /tmp/*
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
