@@ -24,11 +24,12 @@ RUN apt-get update \
 	 	python \
 	 	python-pip \
 	 	rabbitmq-server \
+        clang-format-6.0 \
 	 	curl
 
 RUN curl -q https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
  && python /tmp/get-pip.py \
- && pip install -U virtualenv \
+ && pip install -U virtualenv pipenv \
  	# install dependancies for libc \
  && pip install ujson==1.33 numpy==1.9
 
