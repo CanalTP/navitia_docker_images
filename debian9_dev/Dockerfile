@@ -33,26 +33,27 @@ RUN apt-get update && \
         libosmpbf-dev \
         python-protobuf \
         clang-format-6.0 \
-        libssl-dev
+        libssl-dev && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python 3.6 needed by black for our pre-commits
 RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
     && cd /tmp/Python-3.6.8     \
     && ./configure              \
     && make -j$(nproc)          \
-    && make altinstall
+    && make altinstall		\
+    && rm -rf /tmp/*
 
 # we can't use pip from system it's too old
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py \
     && pip install -U virtualenv pipenv && \
 	# install dependancies for libc
-	pip install ujson==1.33 numpy==1.9
+	pip install ujson==1.33 numpy==1.9 && \
+	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
 RUN useradd -u 109 -g 115 jenkins | chpasswd; exit 0
-
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip/*
 
 CMD ["/usr/sbin/rabbitmq-server"]

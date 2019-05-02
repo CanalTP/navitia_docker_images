@@ -38,7 +38,8 @@ RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C
     && cd /tmp/Python-3.6.8     \
     && ./configure              \
     && make -j$(nproc)          \
-    && make altinstall
+    && make altinstall		\
+    && rm -rf /tmp/*
 
 # Add address of the canaltp.local apt server
 RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
@@ -47,14 +48,13 @@ RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		# Get the gpg key to authorize downloads from local apt server
 		&& wget --output-document=- http://apt.canaltp.local/debian/repositories/canaltp.gpg.key | apt-key add - \
 		&& apt-get -y --force-yes -t jessie-dev install libosmpbf-dev python-protobuf \
-		&& apt-get clean
+		&& apt-get clean \
+		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN pip install pip virtualenv pipenv -U && \
 	# install dependancies for libc
-	pip install ujson==1.33 numpy==1.9
-
-# Clean up the environment
-RUN rm -rf /tmp/* /var/tmp/* ~/.cache/pip/* /var/lib/apt/lists/* /tmp/*
+	pip install ujson==1.33 numpy==1.9 && \
+	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
