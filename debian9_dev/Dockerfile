@@ -3,6 +3,9 @@ FROM debian:9
 ENV TZ=Europe/Paris
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
+# Install backport to install clang-format-6.0
+RUN echo "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backport.list
+
 RUN apt-get update && \
 	apt-get install -y \
 		git \
@@ -29,14 +32,22 @@ RUN apt-get update && \
 		vim \
         libosmpbf-dev \
         python-protobuf \
+        clang-format-6.0 \
         libssl-dev && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Python 3.6 needed by black for our pre-commits
+RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
+    && cd /tmp/Python-3.6.8     \
+    && ./configure              \
+    && make -j$(nproc)          \
+    && make altinstall		\
+    && rm -rf /tmp/*
 
 # we can't use pip from system it's too old
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py \
-    && pip install -U virtualenv  && \
+    && pip install -U virtualenv pipenv && \
 	# install dependancies for libc
 	pip install ujson==1.33 numpy==1.9 && \
 	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*

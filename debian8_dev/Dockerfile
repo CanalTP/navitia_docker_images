@@ -33,6 +33,14 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Python 3.6 needed by black for our pre-commits
+RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
+    && cd /tmp/Python-3.6.8     \
+    && ./configure              \
+    && make -j$(nproc)          \
+    && make altinstall		\
+    && rm -rf /tmp/*
+
 # Add address of the canaltp.local apt server
 RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		&& apt-get update \
@@ -43,7 +51,7 @@ RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		&& apt-get clean \
 		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip install pip virtualenv -U && \
+RUN pip install pip virtualenv pipenv -U && \
 	# install dependancies for libc
 	pip install ujson==1.33 numpy==1.9 && \
 	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*

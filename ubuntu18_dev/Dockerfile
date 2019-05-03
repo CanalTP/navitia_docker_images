@@ -24,18 +24,20 @@ RUN apt-get update \
 	 	python \
 	 	python-pip \
 	 	rabbitmq-server \
-	 	curl
+	 	clang-format-6.0 \
+	 	curl 	\
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -q https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py \
- && python /tmp/get-pip.py \
- && pip install -U virtualenv \
- 	# install dependancies for libc \
- && pip install ujson==1.33 numpy==1.9
+    && python /tmp/get-pip.py               \
+    && pip install -U virtualenv pipenv     \
+ 	# install dependancies for libc         \
+    && pip install ujson==1.33 numpy==1.9	\
+    && rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
 RUN useradd -u 109 -g 115 jenkins | chpasswd; exit 0
-
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip/* && apt clean
 
 CMD ["/usr/sbin/rabbitmq-server"]
