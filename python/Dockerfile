@@ -17,7 +17,7 @@ RUN apt-get update --fix-missing \
         automake \
         autoconf \
         libtool \ 
-	&&	pip install --upgrade pip && pip install uwsgi \
+    &&  pip install --upgrade pip && pip install uwsgi \
     &&  wget https://github.com/protocolbuffers/protobuf/archive/v3.3.2.tar.gz && tar -xf v3.3.2.tar.gz \
     &&  cd protobuf-3.3.2 \ 
     &&  ./autogen.sh && ./configure && make -j$(grep -c vendor_id /proc/cpuinfo) && make install \ 
