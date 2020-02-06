@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        docker_image_name: [debian9_dev]
+        docker_image_name: [debian9_dev, debian10_dev]
 
     steps:
     - uses: actions/checkout@v2
