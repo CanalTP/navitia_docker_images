@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on: 
+  pull_request:
+    types:
+    - created 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        docker_image_name: [debian9_dev]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file ./${{matrix.docker_image_name}}/Dockerfile --tag navitia/${{matrix.docker_image_name}}:$GITHUB_SHA
