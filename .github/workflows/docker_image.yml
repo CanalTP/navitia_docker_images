@@ -38,4 +38,5 @@ jobs:
         if : github.event_name == 'push'
         run : | 
             docker login -u navitia -p ${{ secrets.docker_hub_pwd }}
-            docker push navitia/${{matrix.docker_image_name}}
+            docker tag navitia/${{matrix.docker_image_name}}:$GITHUB_SHA navitia/${{matrix.docker_image_name}}:latest
+            docker push navitia/${{matrix.docker_image_name}}:lastest
