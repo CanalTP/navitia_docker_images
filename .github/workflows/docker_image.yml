@@ -17,7 +17,7 @@ jobs:
       steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: docker build . --file ./${{matrix.docker_image_name}}/Dockerfile
+        run: docker build . --file ./${{matrix.docker_image_name}}/Dockerfile --tag navitia/${{matrix.docker_image_name}}
       - name: Publish image to Docker Hub
         if : github.event_name == 'push'
         run : | 
