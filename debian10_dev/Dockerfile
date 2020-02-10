@@ -9,6 +9,7 @@ RUN apt-get update && \
 		postgresql-server-dev-all \
 		python-dev \
 		python3.7-dev \
+		2to3 \
 		libzmq3-dev \
 		debhelper \
 		build-essential \
