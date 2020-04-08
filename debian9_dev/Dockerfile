@@ -9,6 +9,7 @@ RUN echo "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/so
 RUN apt-get update && \
 	apt-get install -y \
 		git \
+		libsqlite3-dev \
 		postgresql-server-dev-all \
 		python-dev \
 		libzmq3-dev \
@@ -37,7 +38,7 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install Python 3.6 needed by black for our pre-commits
+# Install Python 3.6 
 RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
     && cd /tmp/Python-3.6.8     \
     && ./configure              \
