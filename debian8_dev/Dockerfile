@@ -3,10 +3,9 @@ FROM debian:8
 # use UTC as localtime
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
-RUN echo "deb http://apt.canaltp.local/debian/repositories jessie-dev main" > /etc/apt/sources.list.d/canaltp.list
-
 RUN apt-get update && \
 	apt-get install -y python-pip \
+        wget \
 		git \
 		postgresql-server-dev-all \
 		python-dev \
@@ -20,8 +19,6 @@ RUN apt-get update && \
 		liblog4cplus-1.0-4 \
 		liblog4cplus-dev && \
 	apt-get install -y --force-yes \
-		libprotobuf-dev \
-		protobuf-compiler \
 		libproj0 \
 		libproj-dev \
 		libpqxx3-dev \
@@ -34,7 +31,7 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python 3.6 needed by black for our pre-commits
-RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C /tmp/      \
+RUN wget 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' -O - | tar -xz -C /tmp/      \
     && cd /tmp/Python-3.6.8     \
     && ./configure              \
     && make -j$(nproc)          \
@@ -42,12 +39,12 @@ RUN curl 'https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz' | tar -xz -C
     && rm -rf /tmp/*
 
 # Add address of the canaltp.local apt server
+RUN echo "deb http://apt.canaltp.local/debian/repositories jessie-dev main" > /etc/apt/sources.list.d/canaltp.list
 RUN echo "nameserver 10.50.83.15" > /etc/resolv.conf \
 		&& apt-get update \
-		&& apt-get install -y wget \
 		# Get the gpg key to authorize downloads from local apt server
 		&& wget --output-document=- http://apt.canaltp.local/debian/repositories/canaltp.gpg.key | apt-key add - \
-		&& apt-get -y --force-yes -t jessie-dev install libosmpbf-dev python-protobuf \
+		&& apt-get -y --force-yes -t jessie-dev install libosmpbf-dev libprotobuf-dev protobuf-compiler python-protobuf \
 		&& apt-get clean \
 		&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
