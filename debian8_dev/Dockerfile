@@ -6,7 +6,6 @@ RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtim
 RUN apt-get update && \
 	apt-get install -y python-pip \
         wget \
-		git \
 		postgresql-server-dev-all \
 		python-dev \
 		libzmq-dev \
@@ -52,6 +51,20 @@ RUN pip install pip virtualenv pipenv -U && \
 	# install dependancies for libc
 	pip install ujson==1.33 numpy==1.9 && \
 	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
+
+# Install the latest and Greatest of Git !
+RUN apt-get update \
+    && apt-get install -y dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
+RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.26.2.tar.xz -O - | tar -xJ -C /tmp/ \
+    && cd /tmp/git-2.26.2/ \
+    && make configure \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && rm -rf /tmp/* /var/tmp/* \
+    && git --version
+
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
