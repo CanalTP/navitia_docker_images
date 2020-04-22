@@ -8,7 +8,6 @@ RUN echo "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/so
 
 RUN apt-get update && \
 	apt-get install -y \
-		git \
 		postgresql-server-dev-all \
 		libsqlite3-dev \
 		python-dev \
@@ -52,6 +51,19 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py
 	# install dependancies for libc
 	pip install ujson==1.33 numpy==1.9 && \
 	rm -rf /tmp/* /var/tmp/* ~/.cache/pip/*
+
+# Install the latest and Greatest of Git !
+RUN apt-get update \
+    && apt-get install -y dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
+RUN curl https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.26.2.tar.xz | tar -xJ -C /tmp/ \
+    && cd /tmp/git-2.26.2/ \
+    && make configure \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && rm -rf /tmp/* /var/tmp/* \
+    && git --version
 
 # add user and group jenkins, with specific userid and groupid, never fail
 RUN groupadd -g 115 jenkins; exit 0
