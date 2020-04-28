@@ -4,29 +4,30 @@ FROM debian:8
 RUN rm -f /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 RUN apt-get update && \
-	apt-get install -y python-pip \
+    apt-get install -y python-pip \
         wget \
-		postgresql-server-dev-all \
+        postgresql-server-dev-all \
         libsqlite3-dev \
-		python-dev \
-		libzmq-dev \
-		debhelper \
-		build-essential \
-		cmake \
-		gcc \
-		g++ \
-		libboost-all-dev \
-		liblog4cplus-1.0-4 \
-		liblog4cplus-dev && \
-	apt-get install -y --force-yes \
-		libproj0 \
-		libproj-dev \
-		libpqxx3-dev \
-		rabbitmq-server \
-		libgeos-c1 \
-		libgoogle-perftools4 \
-		libgoogle-perftools-dev \
-		vim && \
+        python-dev \
+        libzmq-dev \
+        debhelper \
+        build-essential \
+        cmake \
+        gcc \
+        g++ \
+        libboost-all-dev \
+        liblog4cplus-1.0-4 \
+        liblog4cplus-dev && \
+    apt-get install -y --force-yes \
+        libproj0 \
+        libproj-dev \
+        libpqxx3-dev \
+        rabbitmq-server \
+        libgeos-c1 \
+        libgoogle-perftools4 \
+        libgoogle-perftools-dev \
+        vim && \
+    apt-get install -y autoconf automake libtool curl make g++ unzip && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
