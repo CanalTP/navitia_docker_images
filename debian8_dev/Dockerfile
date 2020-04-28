@@ -7,6 +7,7 @@ RUN apt-get update && \
 	apt-get install -y python-pip \
         wget \
 		postgresql-server-dev-all \
+        libsqlite3-dev \
 		python-dev \
 		libzmq-dev \
 		debhelper \
