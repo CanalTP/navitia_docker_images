@@ -27,7 +27,6 @@ RUN apt-get update && \
         libgoogle-perftools4 \
         libgoogle-perftools-dev \
         vim && \
-    apt-get install -y autoconf automake libtool curl make g++ unzip && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
