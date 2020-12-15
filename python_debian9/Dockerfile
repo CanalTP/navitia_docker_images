@@ -1,6 +1,6 @@
-FROM debian:8
+FROM debian:9
 
-LABEL "io.navitia.name"="navitia/python"
+LABEL "io.navitia.name"="navitia/python:debian9"
 
 WORKDIR /
 
